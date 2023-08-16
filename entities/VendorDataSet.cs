@@ -30,7 +30,8 @@ public class VendorDataSet
         return this._customerVendorRecords.Values.ToList();
     }
 
-    public List<string> GetProducts() {
+    public List<string> GetProducts()
+    {
         return this._products.Keys.ToList();
     }
 }
