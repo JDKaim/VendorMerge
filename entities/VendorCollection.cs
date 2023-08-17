@@ -3,9 +3,6 @@ public class VendorCollection
 
     private Dictionary<string, VendorDataSet> _vendorDataSets = new Dictionary<string, VendorDataSet>();
 
-    private Dictionary<string, bool> _vendors = new Dictionary<string, bool>();
-
-
     public VendorCollection()
     {
     }
@@ -30,6 +27,6 @@ public class VendorCollection
 
     public List<string> GetVendors()
     {
-        return this._vendors.Keys.ToList();
+        return this._vendorDataSets.Keys.ToList();
     }
 }
