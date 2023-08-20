@@ -4,21 +4,26 @@ using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace VendorMerge.Parsers
 {
-    public class FirstParser : IVendorParser
+    public class ProwrkVendorParser : ExcelVendorParser
     {
 
-        public string Name => "Master Product Billing";
+        public override string Name => "PROWRK Product Billing";
 
-        public VendorParserResults Parse(IVendorCollection dataStore)
+        public ProwrkVendorParser(string inputDirectory) : base(inputDirectory, "Billing_AutomatePROWRK_.xlsx")
         {
-            var wb = new XLWorkbook("input\\Billing_AutomatePROWRK_.xlsx");
-            var ws = wb.Worksheet("in");
-            bool foundVendorFile = false;
-            if (foundVendorFile) { return VendorParserResults.CreateError($"Could not locate vendor file for '{this.Name}'"); }
 
-            bool fileLoadErrorOccurred = false;
-            if (fileLoadErrorOccurred) { return VendorParserResults.CreateError($"An error occurred while loading the file for '{this.Name}': (Error like 'file could not be loaded as an Excel file')"); }
-
+        }
+        protected override VendorParserResults ParseInternal(XLWorkbook wb, IVendorCollection dataStore)
+        {
+            IXLWorksheet ws;
+            try
+            {
+                ws = wb.Worksheet("in");
+            }
+            catch (Exception e)
+            {
+                return VendorParserResults.CreateError($"An error occurred while loading the file for '{this.Name}': {e.Message}");
+            }
             int recordsParsed = 0;
             var firstRowUsed = ws.FirstRowUsed();
             var firstColumnUsed = ws.FirstColumnUsed();
