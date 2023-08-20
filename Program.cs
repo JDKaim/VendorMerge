@@ -5,38 +5,31 @@ using VendorMerge.Printers;
 VendorCollection dataStore = new VendorCollection();
 CompetingVendorCollection competingDataStore = new CompetingVendorCollection();
 
-List<IVendorParser> vendorParsers =
-    new List<IVendorParser>()
-    {
-        new MasterParser()
-    };
+MasterParser masterParser = new MasterParser("input");
 
 List<IVendorParser> newVendorParsers =
     new List<IVendorParser>()
     {
-        new FirstParser()
+        new ProwrkVendorParser("input")
     };
 
-foreach (IVendorParser vendorParser in vendorParsers)
+VendorParserResults results = masterParser.Parse(dataStore);
+
+if (!results.Succeeded)
 {
-    VendorParserResults results = vendorParser.Parse(dataStore);
-
-    if (!results.Succeeded)
+    Console.Error.WriteLine("One or more errors occurred during vendor parsing: ");
+    foreach (string error in results.Errors)
     {
-        Console.Error.WriteLine("One or more errors occurred during vendor parsing: ");
-        foreach (string error in results.Errors)
-        {
-            Console.Error.WriteLine($"- {error}");
-        }
-        return;
+        Console.Error.WriteLine($"- {error}");
     }
-
-    Console.WriteLine($"Parsed {results.RecordsParsed} from {vendorParser.Name}");
+    return;
 }
+
+Console.WriteLine($"Parsed {results.RecordsParsed} records from {masterParser.Name}");
 
 foreach (IVendorParser newVendorParser in newVendorParsers)
 {
-    VendorParserResults results = newVendorParser.Parse(competingDataStore);
+    results = newVendorParser.Parse(competingDataStore);
 
     if (!results.Succeeded)
     {
@@ -48,7 +41,7 @@ foreach (IVendorParser newVendorParser in newVendorParsers)
         return;
     }
 
-    Console.WriteLine($"Parsed {results.RecordsParsed} from {newVendorParser.Name}");
+    Console.WriteLine($"Parsed {results.RecordsParsed} records from {newVendorParser.Name}");
 }
 
 Console.WriteLine($"All vendor files were successfully parsed");
