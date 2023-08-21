@@ -10,7 +10,16 @@ MasterParser masterParser = new MasterParser("input");
 List<IVendorParser> newVendorParsers =
     new List<IVendorParser>()
     {
-        new ProwrkVendorParser("input")
+        new ProwrkVendorParser("input"),
+        new PronetVendorParser("input"),
+        new ProservVendorParser("input"),
+        new BitdefenderVendorParser("input"),
+        new BluevaultVendorParser("input"),
+        new MyglueVendorParser("input"),
+        new Kb4VendorParser("input"),
+        new S1completeVendorParser("input"),
+        new S1controlVendorParser("input"),
+        new VeeamVendorParser("input")
     };
 
 VendorParserResults results = masterParser.Parse(dataStore);

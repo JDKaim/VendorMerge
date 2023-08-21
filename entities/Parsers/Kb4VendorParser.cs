@@ -4,12 +4,12 @@ using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace VendorMerge.Parsers
 {
-    public class MasterParser : ExcelVendorParser
+    public class Kb4VendorParser : ExcelVendorParser
     {
 
-        public override string Name => "Master Product Billing";
+        public override string Name => "KnowBe4 Product Billing";
 
-        public MasterParser(string inputDirectory) : base(inputDirectory, "Product Billing*.xlsx")
+        public Kb4VendorParser(string inputDirectory) : base(inputDirectory, "Kb4*.xlsx")
         {
 
         }
@@ -18,7 +18,7 @@ namespace VendorMerge.Parsers
             IXLWorksheet ws;
             try
             {
-                ws = wb.Worksheet("GRID");
+                ws = wb.Worksheet("in");
             }
             catch (Exception e)
             {
@@ -37,10 +37,32 @@ namespace VendorMerge.Parsers
                 while (categoryRow.RowNumber() < lastRowUsed.RowNumber() + 1 && categoryColumn.ColumnNumber() < lastColumnUsed.ColumnNumber() + 1)
                 {
                     string vendor = "Vendor";
-                    string product = ws.Cell(1, categoryColumn.ColumnNumber()).GetString();
+                    string product = "KnowBe4";
                     int quantity = 0;
                     if (ws.Cell(categoryRow.RowNumber(), categoryColumn.ColumnNumber()).GetString() != "" && ws.Cell(categoryRow.RowNumber(), categoryColumn.ColumnNumber()).GetString() != " ")
                     {
+                        bool contained = false;
+                        foreach (VendorDataSet vendorDS in dataStore.GetVendorDataSets()) {
+                            if (vendorDS.GetCustomers().Contains(customer)) {
+                                contained = true;
+                                break;
+                            }
+                        }
+                        if (!contained) {
+                            bool fixer = false;
+                            var firstRenamingRow = renamer.FirstRowUsed();
+                            while (!firstRenamingRow.IsEmpty()) {
+                                if (firstRenamingRow.Cell(1).Value.ToString() == customer) {
+                                    customer = firstRenamingRow.Cell(2).Value.ToString();
+                                    fixer = true;
+                                    break;
+                                }
+                                firstRenamingRow = firstRenamingRow.RowBelow();
+                            }
+                            if (!fixer) {
+                                return VendorParserResults.CreateError($"Customer '{customer}' does not exist. Please define in \"Renaming.xlsx\" or add to Master Sheet.");
+                            }
+                        }
                         quantity = int.Parse(ws.Cell(categoryRow.RowNumber(), categoryColumn.ColumnNumber()).GetString());
                     }
                     dataStore.AddCustomerRecordQuantity(vendor, customer, product, quantity);
