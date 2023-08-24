@@ -19,7 +19,8 @@ List<IVendorParser> newVendorParsers =
         new Kb4VendorParser("input"),
         new S1completeVendorParser("input"),
         new S1controlVendorParser("input"),
-        new VeeamVendorParser("input")
+        new VeeamVendorParser("input"),
+        new InkyVendorParser("input")
     };
 
 VendorParserResults results = masterParser.Parse(dataStore);
