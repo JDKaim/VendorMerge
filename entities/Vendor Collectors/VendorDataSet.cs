@@ -38,4 +38,12 @@ public class VendorDataSet
     {
         return this._products.Keys.ToList();
     }
+
+    public int TotalSales(string product) {
+        int total = 0;
+        foreach (CustomerVendorRecord cvr in GetCustomerVendorRecords()) {
+            total += cvr.GetQuantity(product);
+        }
+        return total;
+    }
 }

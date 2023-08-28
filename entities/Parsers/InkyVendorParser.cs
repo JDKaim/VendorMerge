@@ -38,6 +38,9 @@ namespace VendorMerge.Parsers
                 {
                     string vendor = "Vendor";
                     string product = "Inky";
+                    if (categoryColumn.ColumnNumber() == lastColumnUsed.ColumnNumber()) {
+                        product = "Inky Encryption";
+                    }
                     int quantity = 0;
                     if (ws.Cell(categoryRow.RowNumber(), categoryColumn.ColumnNumber()).GetString() != "" && ws.Cell(categoryRow.RowNumber(), categoryColumn.ColumnNumber()).GetString() != " ")
                     {
