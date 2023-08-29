@@ -189,6 +189,7 @@ namespace VendorMerge.Printers
                 totalSum += currentSum;
                 summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber()).Value = currentSum;
                 double monthlyDifference = currentSum - double.Parse(summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() - 1).Value.ToString());
+                summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() + 2).Value = currentSum + double.Parse(summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() + 2).Value.ToString());
                 if (monthlyDifference < 0)
                 {
                     summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() + 1).Value = $"({monthlyDifference * -1})";
@@ -201,19 +202,26 @@ namespace VendorMerge.Printers
             }
             sumRow = sumRow.RowBelow().RowBelow();
             summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber()).Value = totalSum;
+            summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() + 2).Value = totalSum + double.Parse(summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() + 2).Value.ToString());
             double totalDifference = totalSum - double.Parse(summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() - 1).Value.ToString());
             if (totalDifference < 0)
             {
                 summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() + 1).Value = $"({totalDifference * -1})";
                 summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() + 1).Style.Font.FontColor = XLColor.Red;
+                summary.Cell(19, 19).Style.Fill.BackgroundColor = XLColor.CherryBlossomPink;
+                summary.Cell(19, 19).Style.Font.FontColor = XLColor.Red;
             }
             else
             {
+                summary.Cell(19, 19).Style.Fill.BackgroundColor = XLColor.LightGreen;
+                summary.Cell(19, 19).Style.Font.FontColor = XLColor.Green;
                 summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() + 1).Value = totalDifference;
             }
             sumRow = sumRow.RowBelow();
             double lastMonth = double.Parse(summary.Cell(sumRow.RowNumber() - 1, sumColumn.ColumnNumber() - 1).Value.ToString());
             summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber()).Value = (totalSum - lastMonth) / lastMonth;
+            summary.Cell(19, 19).Value = (totalSum - lastMonth) / lastMonth;
+
 
             Dictionary<string, Dictionary<string, int>> _vendorProducts = combiner.combineProducts(vendorCollection);
             sumRow = sumRow.RowBelow().RowBelow().RowBelow().RowBelow().RowBelow().RowBelow();
@@ -232,7 +240,7 @@ namespace VendorMerge.Printers
                 summary.Cell(sumRow.RowNumber(), 19).Value = currentNum - int.Parse(summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() - 1).Value.ToString());
                 sumRow = sumRow.RowBelow();
             }
-
+            
             wb.SaveAs(vendorCollection.Name + ".xlsx");
         }
     }
