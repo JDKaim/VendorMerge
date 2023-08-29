@@ -1,6 +1,7 @@
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.Office2013.Word.Drawing;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 /*  
  *  MasterPrinter is the printing class. It has two functions: Print() and FinalPrint().
@@ -176,9 +177,62 @@ namespace VendorMerge.Printers
                 sumColumn = sumColumn.ColumnRight();
             }
             sumColumn.InsertColumnsBefore(1);
+            sumColumn = sumColumn.ColumnLeft();
             summary.Cell(2, sumColumn.ColumnNumber()).Value = "Current Month";
             UnderVendors combiner = new UnderVendors();
             Dictionary<string, double> combinedRevenues = combiner.combineRevenue(totalSpending);
+            var sumRow = summary.Row(3);
+            double totalSum = 0;
+            while (sumRow.RowNumber() < 14)
+            {
+                double currentSum = combinedRevenues[summary.Cell(sumRow.RowNumber(), 1).Value.ToString()];
+                totalSum += currentSum;
+                summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber()).Value = currentSum;
+                double monthlyDifference = currentSum - double.Parse(summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() - 1).Value.ToString());
+                if (monthlyDifference < 0)
+                {
+                    summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() + 1).Value = $"({monthlyDifference * -1})";
+                    summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() + 1).Style.Font.FontColor = XLColor.Red;
+                    sumRow = sumRow.RowBelow();
+                    continue;
+                }
+                summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() + 1).Value = monthlyDifference;
+                sumRow = sumRow.RowBelow();
+            }
+            sumRow = sumRow.RowBelow().RowBelow();
+            summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber()).Value = totalSum;
+            double totalDifference = totalSum - double.Parse(summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() - 1).Value.ToString());
+            if (totalDifference < 0)
+            {
+                summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() + 1).Value = $"({totalDifference * -1})";
+                summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() + 1).Style.Font.FontColor = XLColor.Red;
+            }
+            else
+            {
+                summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() + 1).Value = totalDifference;
+            }
+            sumRow = sumRow.RowBelow();
+            double lastMonth = double.Parse(summary.Cell(sumRow.RowNumber() - 1, sumColumn.ColumnNumber() - 1).Value.ToString());
+            summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber()).Value = (totalSum - lastMonth) / lastMonth;
+
+            Dictionary<string, Dictionary<string, int>> _vendorProducts = combiner.combineProducts(vendorCollection);
+            sumRow = sumRow.RowBelow().RowBelow().RowBelow().RowBelow().RowBelow().RowBelow();
+            Dictionary<string, int> _customersUsing = combiner.customerUsage(_vendorProducts);
+            sumColumn = summary.Column(9);
+            while (sumRow.RowNumber() < 40)
+            {
+                string currentVendor = summary.Cell(sumRow.RowNumber(), 1).Value.ToString();
+                int currentNum = 0;
+                if (_customersUsing.ContainsKey(currentVendor))
+                {
+                    currentNum = _customersUsing[currentVendor];
+                }
+                summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber()).Value = currentNum;
+                summary.Cell(sumRow.RowNumber(), 14).Value = currentNum / double.Parse(summary.Cell(21, 14).Value.ToString());
+                summary.Cell(sumRow.RowNumber(), 19).Value = currentNum - int.Parse(summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() - 1).Value.ToString());
+                sumRow = sumRow.RowBelow();
+            }
+
             wb.SaveAs(vendorCollection.Name + ".xlsx");
         }
     }
