@@ -208,25 +208,34 @@ namespace VendorMerge.Printers
             {
                 summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() + 1).Value = $"({totalDifference * -1})";
                 summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() + 1).Style.Font.FontColor = XLColor.Red;
-                summary.Cell(19, 19).Style.Fill.BackgroundColor = XLColor.CherryBlossomPink;
-                summary.Cell(19, 19).Style.Font.FontColor = XLColor.Red;
+                summary.Cell(19, sumColumn.ColumnNumber() + 2).Style.Fill.BackgroundColor = XLColor.CherryBlossomPink;
+                summary.Cell(19, sumColumn.ColumnNumber() + 2).Style.Font.FontColor = XLColor.Red;
             }
             else
             {
-                summary.Cell(19, 19).Style.Fill.BackgroundColor = XLColor.LightGreen;
-                summary.Cell(19, 19).Style.Font.FontColor = XLColor.Green;
+                summary.Cell(19, sumColumn.ColumnNumber() + 2).Style.Fill.BackgroundColor = XLColor.LightGreen;
+                summary.Cell(19, sumColumn.ColumnNumber() + 2).Style.Font.FontColor = XLColor.Green;
                 summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() + 1).Value = totalDifference;
             }
             sumRow = sumRow.RowBelow();
             double lastMonth = double.Parse(summary.Cell(sumRow.RowNumber() - 1, sumColumn.ColumnNumber() - 1).Value.ToString());
             summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber()).Value = (totalSum - lastMonth) / lastMonth;
-            summary.Cell(19, 19).Value = (totalSum - lastMonth) / lastMonth;
+            summary.Cell(19, sumColumn.ColumnNumber() + 2).Value = (totalSum - lastMonth) / lastMonth;
 
 
             Dictionary<string, Dictionary<string, int>> _vendorProducts = combiner.combineProducts(vendorCollection);
             sumRow = sumRow.RowBelow().RowBelow().RowBelow().RowBelow().RowBelow().RowBelow();
             Dictionary<string, int> _customersUsing = combiner.customerUsage(_vendorProducts);
-            sumColumn = summary.Column(9);
+            sumColumn = summary.Column(sumColumn.ColumnNumber() - 8);
+            List<string> characters = new List<string>{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+            int sumColumnNumber = sumColumn.ColumnNumber();
+            string sumLetters = "";
+            while (sumColumnNumber > 0) {
+                sumLetters = characters[(sumColumnNumber % 26) - 1] + sumLetters;
+                sumColumnNumber /= 26;
+            }
+            summary.Range($"{sumLetters}{sumRow.RowNumber() - 2}:{sumLetters}{39}").InsertColumnsBefore(1);
+            summary.Cell(sumRow.RowNumber() - 1, sumColumn.ColumnNumber()).Value = "Current Month";
             while (sumRow.RowNumber() < 40)
             {
                 string currentVendor = summary.Cell(sumRow.RowNumber(), 1).Value.ToString();
@@ -236,8 +245,8 @@ namespace VendorMerge.Printers
                     currentNum = _customersUsing[currentVendor];
                 }
                 summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber()).Value = currentNum;
-                summary.Cell(sumRow.RowNumber(), 14).Value = currentNum / double.Parse(summary.Cell(21, 14).Value.ToString());
-                summary.Cell(sumRow.RowNumber(), 19).Value = currentNum - int.Parse(summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() - 1).Value.ToString());
+                summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() + 1).Value = currentNum / double.Parse(summary.Cell(21, sumColumn.ColumnNumber() + 1).Value.ToString());
+                summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() + 2).Value = currentNum - int.Parse(summary.Cell(sumRow.RowNumber(), sumColumn.ColumnNumber() - 1).Value.ToString());
                 sumRow = sumRow.RowBelow();
             }
             
