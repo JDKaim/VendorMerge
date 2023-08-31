@@ -9,16 +9,18 @@ namespace VendorMerge.Parsers
 
         public override string Name => "BlueVault Product Billing";
 
-        public BluevaultVendorParser(string inputDirectory) : base(inputDirectory, "BlueVault*.xlsx")
-        {
+        private string WorksheetName;
 
+        public BluevaultVendorParser(string inputDirectory, string spreadsheetName, string worksheetName) : base(inputDirectory, spreadsheetName)
+        {
+            this.WorksheetName = worksheetName;
         }
         protected override VendorParserResults ParseInternal(XLWorkbook wb, IVendorCollection dataStore, IXLWorksheet renamer)
         {
             IXLWorksheet ws;
             try
             {
-                ws = wb.Worksheet("BlueVault_Aug2023");
+                ws = wb.Worksheet(this.WorksheetName);
             }
             catch (Exception e)
             {

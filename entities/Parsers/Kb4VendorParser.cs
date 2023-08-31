@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Office.PowerPoint.Y2021.M06.Main;
 using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace VendorMerge.Parsers
@@ -9,16 +10,18 @@ namespace VendorMerge.Parsers
 
         public override string Name => "KnowBe4 Product Billing";
 
-        public Kb4VendorParser(string inputDirectory) : base(inputDirectory, "Kb4*.xlsx")
-        {
+        private string WorksheetName;
 
+        public Kb4VendorParser(string inputDirectory, string spreadsheetName, string worksheetName) : base(inputDirectory, spreadsheetName)
+        {
+            this.WorksheetName = worksheetName;
         }
         protected override VendorParserResults ParseInternal(XLWorkbook wb, IVendorCollection dataStore, IXLWorksheet renamer)
         {
             IXLWorksheet ws;
             try
             {
-                ws = wb.Worksheet("in");
+                ws = wb.Worksheet(this.WorksheetName);
             }
             catch (Exception e)
             {

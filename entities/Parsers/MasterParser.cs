@@ -9,16 +9,18 @@ namespace VendorMerge.Parsers
 
         public override string Name => "Master Product Billing";
 
-        public MasterParser(string inputDirectory) : base(inputDirectory, "Product Billing*.xlsx")
-        {
+        private string WorksheetName;
 
+        public MasterParser(string inputDirectory, string spreadsheetName, string worksheetName) : base(inputDirectory, spreadsheetName)
+        {
+            this.WorksheetName = worksheetName;
         }
         protected override VendorParserResults ParseInternal(XLWorkbook wb, IVendorCollection dataStore, IXLWorksheet renamer)
         {
             IXLWorksheet ws;
             try
             {
-                ws = wb.Worksheet("GRID");
+                ws = wb.Worksheet(this.WorksheetName);
             }
             catch (Exception e)
             {

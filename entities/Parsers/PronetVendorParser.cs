@@ -10,16 +10,18 @@ namespace VendorMerge.Parsers
 
         public override string Name => "PRONET Product Billing";
 
-        public PronetVendorParser(string inputDirectory) : base(inputDirectory, "Billing_AutomatePRONET_.xlsx")
-        {
+        private string WorksheetName;
 
+        public PronetVendorParser(string inputDirectory, string spreadsheetName, string worksheetName) : base(inputDirectory, spreadsheetName)
+        {
+            this.WorksheetName = worksheetName;
         }
         protected override VendorParserResults ParseInternal(XLWorkbook wb, IVendorCollection dataStore, IXLWorksheet renamer)
         {
             IXLWorksheet ws;
             try
             {
-                ws = wb.Worksheet("in");
+                ws = wb.Worksheet(this.WorksheetName);
             }
             catch (Exception e)
             {

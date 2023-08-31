@@ -9,16 +9,18 @@ namespace VendorMerge.Parsers
 
         public override string Name => "Bitdefender Product Billing";
 
-        public BitdefenderVendorParser(string inputDirectory) : base(inputDirectory, "Bitdefender*.xlsx")
-        {
+        private string WorksheetName;
 
+        public BitdefenderVendorParser(string inputDirectory, string spreadsheetName, string worksheetName) : base(inputDirectory, spreadsheetName)
+        {
+            this.WorksheetName = worksheetName;
         }
         protected override VendorParserResults ParseInternal(XLWorkbook wb, IVendorCollection dataStore, IXLWorksheet renamer)
         {
             IXLWorksheet ws;
             try
             {
-                ws = wb.Worksheet("Sheet1");
+                ws = wb.Worksheet(this.WorksheetName);
             }
             catch (Exception e)
             {

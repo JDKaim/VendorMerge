@@ -9,16 +9,18 @@ namespace VendorMerge.Parsers
 
         public override string Name => "MyGlue Product Billing";
 
-        public MyglueVendorParser(string inputDirectory) : base(inputDirectory, "ITG*.xlsx")
-        {
+        private string WorksheetName;
 
+        public MyglueVendorParser(string inputDirectory, string spreadsheetName, string worksheetName) : base(inputDirectory, spreadsheetName)
+        {
+            this.WorksheetName = worksheetName;
         }
         protected override VendorParserResults ParseInternal(XLWorkbook wb, IVendorCollection dataStore, IXLWorksheet renamer)
         {
             IXLWorksheet ws;
             try
             {
-                ws = wb.Worksheet("Sheet1");
+                ws = wb.Worksheet(this.WorksheetName);
             }
             catch (Exception e)
             {

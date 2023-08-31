@@ -9,16 +9,18 @@ namespace VendorMerge.Parsers
 
         public override string Name => "PROSERV Product Billing";
 
-        public ProservVendorParser(string inputDirectory) : base(inputDirectory, "Billing_AutomatePROSERV_*.xlsx")
-        {
+        private string WorksheetName;
 
+        public ProservVendorParser(string inputDirectory, string spreadsheetName, string worksheetName) : base(inputDirectory, spreadsheetName)
+        {
+            this.WorksheetName = worksheetName;
         }
         protected override VendorParserResults ParseInternal(XLWorkbook wb, IVendorCollection dataStore, IXLWorksheet renamer)
         {
             IXLWorksheet ws;
             try
             {
-                ws = wb.Worksheet("FINAL PROSERV - VHOSTPRO");
+                ws = wb.Worksheet(this.WorksheetName);
             }
             catch (Exception e)
             {

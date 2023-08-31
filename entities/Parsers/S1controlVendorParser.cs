@@ -9,16 +9,18 @@ namespace VendorMerge.Parsers
 
         public override string Name => "S1Control Product Billing";
 
-        public S1controlVendorParser(string inputDirectory) : base(inputDirectory, "SentinelOneControl*.xlsx")
-        {
+        private string WorksheetName;
 
+        public S1controlVendorParser(string inputDirectory, string spreadsheetName, string worksheetName) : base(inputDirectory, spreadsheetName)
+        {
+            this.WorksheetName = worksheetName;
         }
         protected override VendorParserResults ParseInternal(XLWorkbook wb, IVendorCollection dataStore, IXLWorksheet renamer)
         {
             IXLWorksheet ws;
             try
             {
-                ws = wb.Worksheet("Sheet1");
+                ws = wb.Worksheet(this.WorksheetName);
             }
             catch (Exception e)
             {

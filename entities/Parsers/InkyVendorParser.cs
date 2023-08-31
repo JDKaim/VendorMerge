@@ -9,16 +9,18 @@ namespace VendorMerge.Parsers
 
         public override string Name => "Inky Product Billing";
 
-        public InkyVendorParser(string inputDirectory) : base(inputDirectory, "Inky*.xlsx")
-        {
+        private string WorksheetName;
 
+        public InkyVendorParser(string inputDirectory, string spreadsheetName, string worksheetName) : base(inputDirectory, spreadsheetName)
+        {
+            this.WorksheetName = worksheetName;
         }
         protected override VendorParserResults ParseInternal(XLWorkbook wb, IVendorCollection dataStore, IXLWorksheet renamer)
         {
             IXLWorksheet ws;
             try
             {
-                ws = wb.Worksheet("ISOutsource");
+                ws = wb.Worksheet(this.WorksheetName);
             }
             catch (Exception e)
             {

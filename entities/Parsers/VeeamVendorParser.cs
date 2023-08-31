@@ -9,16 +9,18 @@ namespace VendorMerge.Parsers
 
         public override string Name => "Veeam Product Billing";
 
-        public VeeamVendorParser(string inputDirectory) : base(inputDirectory, "Veeam*.xlsx")
-        {
+        private string WorksheetName;
 
+        public VeeamVendorParser(string inputDirectory, string spreadsheetName, string worksheetName) : base(inputDirectory, spreadsheetName)
+        {
+            this.WorksheetName = worksheetName;
         }
         protected override VendorParserResults ParseInternal(XLWorkbook wb, IVendorCollection dataStore, IXLWorksheet renamer)
         {
             IXLWorksheet ws;
             try
             {
-                ws = wb.Worksheet("Sheet1");
+                ws = wb.Worksheet(this.WorksheetName);
             }
             catch (Exception e)
             {

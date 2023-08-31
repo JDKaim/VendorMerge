@@ -59,7 +59,7 @@ namespace VendorMerge.Printers
             wb.SaveAs(vendorCollection.Name + ".xlsx");
         }
 
-        public void FinalPrint(IVendorCollection vendorCollection, IVendorCollection masterCollection, IVendorCollection competingCollection, Dictionary<string, double> prices)
+        public void FinalPrint(IVendorCollection vendorCollection, IVendorCollection masterCollection, IVendorCollection competingCollection, Dictionary<string, double> prices, DocumentName masterSheet)
         {
             var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("GRID");
@@ -161,7 +161,7 @@ namespace VendorMerge.Printers
                     column++;
                 }
             }
-            var filePaths = Directory.GetFiles("input", "Product Billing*.xlsx");
+            var filePaths = Directory.GetFiles(masterSheet.getFileLocation(), masterSheet.getSpreadsheetName());
             XLWorkbook master = new XLWorkbook();
             try
             {
