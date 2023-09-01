@@ -3,8 +3,9 @@ using VendorMerge.Parsers;
 using VendorMerge.Printers;
 using ClosedXML.Excel;
 
-VendorCollection dataStore = new VendorCollection("Master Sheet");
-VendorCollection competingDataStore = new VendorCollection("Competing Sheet");
+Dictionary<string, string> renamers = RenamingParser.ParseRename("input","Renaming.xlsx","GRID");
+VendorCollection dataStore = new VendorCollection("Master Sheet", renamers);
+VendorCollection competingDataStore = new VendorCollection("Competing Sheet", renamers);
 Dictionary<string, double> prices = new Dictionary<string, double>();
 
 Dictionary<string, DocumentName> documentNames = DocumentNamesParser.ParseDocumentNames();
@@ -83,7 +84,7 @@ MasterPrinter printer = new MasterPrinter();
 printer.Print(dataStore);
 printer.Print(competingDataStore);
 Consolidator consolidator = new Consolidator();
-printer.FinalPrint(consolidator.Consolidate(dataStore, competingDataStore), dataStore, competingDataStore, prices, documentNames["Master"]);
+printer.FinalPrint(consolidator.Consolidate(dataStore, competingDataStore, renamers), dataStore, competingDataStore, prices, documentNames["Master"]);
 
 Console.WriteLine("Data successfully printed.");
 

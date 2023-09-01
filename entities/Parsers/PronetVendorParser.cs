@@ -27,30 +27,8 @@ namespace VendorMerge.Parsers
                 string customer = ws.Cell(categoryRow.RowNumber(), 1).GetString();
                 string vendor = "Vendor";
                 string product = "PRONET";
-                if (ws.Cell(categoryRow.RowNumber(), categoryColumn.ColumnRight().ColumnNumber()).GetString() != "" && ws.Cell(categoryRow.RowNumber(), categoryColumn.ColumnRight().ColumnNumber()).GetString() != " ")
+                if (!string.IsNullOrWhiteSpace(ws.Cell(categoryRow.RowNumber(), categoryColumn.ColumnRight().ColumnNumber()).GetString()))
                 {
-                    bool contained = false;
-                    foreach (VendorDataSet vendorDS in dataStore.GetVendorDataSets()) {
-                        if (vendorDS.GetCustomers().Contains(customer)) {
-                            contained = true;
-                            break;
-                        }
-                    }
-                    if (!contained) {
-                        bool fixer = false;
-                        var firstRenamingRow = renamer.FirstRowUsed();
-                        while (!firstRenamingRow.IsEmpty()) {
-                            if (firstRenamingRow.Cell(1).Value.ToString() == customer) {
-                                customer = firstRenamingRow.Cell(2).Value.ToString();
-                                fixer = true;
-                                break;
-                            }
-                            firstRenamingRow = firstRenamingRow.RowBelow();
-                        }
-                        if (!fixer) {
-                            return VendorParserResults.CreateError($"Customer '{customer}' does not exist. Please define in \"Renaming.xlsx\" or add to Master Sheet.");
-                        }
-                    }
                     dataStore.AddCustomerRecordQuantity(vendor, customer, product, 1);
                 }
                 recordsParsed++;
