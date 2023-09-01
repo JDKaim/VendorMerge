@@ -26,6 +26,9 @@ namespace VendorMerge.Parsers
 
         public VendorParserResults Parse(IVendorCollection dataStore)
         {
+            SheetParser sheetParser = new SheetParser(this.InputDirectory, this.FilePattern, this.WorksheetName);
+            List<List<string>> data = sheetParser.GetTable();
+            
             var filePaths = Directory.GetFiles(this.InputDirectory, this.FilePattern);
             var renamerPaths = Directory.GetFiles(this.InputDirectory, "Renaming.xlsx");
             if (!filePaths.Any()) { return VendorParserResults.CreateError($"Could not locate file for '{this.Name}'"); }
