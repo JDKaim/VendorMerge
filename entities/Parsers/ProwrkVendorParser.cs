@@ -26,10 +26,9 @@ namespace VendorMerge.Parsers
 
                 string vendor = "Vendor";
                 string product = "PROWRK";
-                int quantity = 0;
                 if (!string.IsNullOrWhiteSpace(ws.Cell(categoryRow.RowNumber(), categoryColumn.ColumnNumber()).GetString()))
                 {
-                    quantity = int.Parse(ws.Cell(categoryRow.RowNumber(), categoryColumn.ColumnNumber()).GetString());
+                    int quantity = int.Parse(ws.Cell(categoryRow.RowNumber(), categoryColumn.ColumnNumber()).GetString());
                     dataStore.AddCustomerRecordQuantity(vendor, customer, product, quantity);
                 }
                 recordsParsed++;

@@ -16,21 +16,17 @@ namespace VendorMerge.Parsers
         {
             int recordsParsed = 0;
             var firstRowUsed = ws.FirstRowUsed();
-            var firstColumnUsed = ws.FirstColumnUsed();
-            var lastColumnUsed = ws.LastColumnUsed();
-            var lastRowUsed = ws.LastRowUsed();
+            var categoryColumn = ws.FirstColumnUsed().ColumnRight();
             var categoryRow = firstRowUsed.RowBelow();
             while (!categoryRow.Cell(1).IsEmpty())
             {
-                var categoryColumn = firstColumnUsed;
                 string customer = ws.Cell(categoryRow.RowNumber(), 2).GetString();
                 customer = customer.Substring(1, customer.Length - 2);
                 string vendor = "Vendor";
                 string product = "SentinelOne Control";
-                int quantity = 0;
-                if (!string.IsNullOrWhiteSpace(ws.Cell(categoryRow.RowNumber(), categoryColumn.ColumnRight().ColumnNumber()).GetString()))
+                if (!string.IsNullOrWhiteSpace(ws.Cell(categoryRow.RowNumber(), categoryColumn.ColumnNumber()).GetString()))
                 {
-                    quantity = int.Parse(ws.Cell(categoryRow.RowNumber(), 1).GetString());
+                    int quantity = int.Parse(ws.Cell(categoryRow.RowNumber(), 1).GetString());
                     dataStore.AddCustomerRecordQuantity(vendor, customer, product, quantity);
                 }
                 recordsParsed++;

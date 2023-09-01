@@ -16,17 +16,14 @@ namespace VendorMerge.Parsers
         {
             int recordsParsed = 0;
             var firstRowUsed = ws.FirstRowUsed();
-            var firstColumnUsed = ws.FirstColumnUsed();
-            var lastColumnUsed = ws.LastColumnUsed();
-            var lastRowUsed = ws.LastRowUsed();
+            var categoryColumn = ws.FirstColumnUsed().ColumnRight();
             var categoryRow = firstRowUsed.RowBelow();
             while (!categoryRow.Cell(1).IsEmpty())
             {
-                var categoryColumn = firstColumnUsed;
                 string customer = ws.Cell(categoryRow.RowNumber(), 2).GetString();
                 string vendor = "Vendor";
                 string product = "MyGlue";
-                if (!string.IsNullOrWhiteSpace(ws.Cell(categoryRow.RowNumber(), categoryColumn.ColumnRight().ColumnNumber()).GetString()))
+                if (!string.IsNullOrWhiteSpace(ws.Cell(categoryRow.RowNumber(), categoryColumn.ColumnNumber()).GetString()))
                 {
                     dataStore.AddCustomerRecordQuantity(vendor, customer, product, 1);
                 }

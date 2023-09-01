@@ -16,18 +16,16 @@ namespace VendorMerge.Parsers
         {
             int recordsParsed = 0;
             var firstRowUsed = ws.FirstRowUsed();
-            var firstColumnUsed = ws.FirstColumnUsed();
-            var lastColumnUsed = ws.LastColumnUsed();
-            var lastRowUsed = ws.LastRowUsed();
+            var categoryColumn = ws.FirstColumnUsed().ColumnRight().ColumnRight().ColumnRight();
             var categoryRow = firstRowUsed.RowBelow();
             while (!categoryRow.Cell(1).IsEmpty())
             {
-                var categoryColumn = firstColumnUsed.ColumnRight().ColumnRight().ColumnRight();
                 var productColumn = categoryColumn.ColumnLeft();
                 string customer = ws.Cell(categoryRow.RowNumber(), 1).GetString();
                 string vendor = "Vendor";
                 string product = "Veeam " + categoryRow.Cell(productColumn.ColumnNumber()).Value.ToString();
-                if (product == "Veeam Standard Server ") {
+                if (product == "Veeam Standard Server ")
+                {
                     product = "Veeam Standard Server";
                 }
                 int quantity = 0;

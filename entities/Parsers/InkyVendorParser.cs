@@ -16,7 +16,6 @@ namespace VendorMerge.Parsers
         {
             int recordsParsed = 0;
             var firstRowUsed = ws.Row(131);
-            var firstColumnUsed = ws.FirstColumnUsed();
             var lastColumnUsed = ws.LastColumnUsed();
             var lastRowUsed = ws.LastRowUsed();
             var categoryRow = firstRowUsed.RowBelow();
@@ -32,14 +31,10 @@ namespace VendorMerge.Parsers
                     {
                         product = "Inky Encryption";
                     }
-                    int quantity = 0;
                     if (!string.IsNullOrWhiteSpace(ws.Cell(categoryRow.RowNumber(), categoryColumn.ColumnNumber()).GetString()))
                     {
-                        if (ws.Cell(categoryRow.RowNumber(), categoryColumn.ColumnNumber()).GetString() == "-")
-                        {
-                            quantity = 0;
-                        }
-                        else
+                        int quantity = 0;
+                        if (ws.Cell(categoryRow.RowNumber(), categoryColumn.ColumnNumber()).GetString() != "-")
                         {
                             quantity = int.Parse(ws.Cell(categoryRow.RowNumber(), categoryColumn.ColumnNumber()).GetString());
                         }
