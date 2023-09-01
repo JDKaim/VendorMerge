@@ -13,13 +13,16 @@ namespace VendorMerge.Parsers
 
         protected readonly string FilePattern;
 
-        public ExcelVendorParser(string inputDirectory, string filePattern)
+        protected readonly string WorksheetName;
+
+        public ExcelVendorParser(string inputDirectory, string filePattern, string worksheetName)
         {
             this.InputDirectory = inputDirectory;
             this.FilePattern = filePattern;
+            this.WorksheetName = worksheetName;
         }
 
-        abstract protected VendorParserResults ParseInternal(XLWorkbook wb, IVendorCollection dataStore, IXLWorksheet renamer);
+        abstract protected VendorParserResults ParseInternal(IXLWorksheet ws, IVendorCollection dataStore, IXLWorksheet renamer);
 
         public VendorParserResults Parse(IVendorCollection dataStore)
         {
@@ -47,6 +50,15 @@ namespace VendorMerge.Parsers
             {
                 return VendorParserResults.CreateError($"An error occurred while loading the file for renaming: {e.Message}");
             }
+            IXLWorksheet dataws;
+            try
+            {
+                dataws = wb.Worksheet(this.WorksheetName);
+            }
+            catch (Exception e)
+            {
+                return VendorParserResults.CreateError($"An error occurred while loading the file for '{this.Name}': {e.Message}");
+            }
             IXLWorksheet ws;
             try
             {
@@ -56,7 +68,8 @@ namespace VendorMerge.Parsers
             {
                 return VendorParserResults.CreateError($"An error occurred while loading the file for '{this.Name}': {e.Message}");
             }
-            VendorParserResults vpr = this.ParseInternal(wb, dataStore, ws);
+            
+            VendorParserResults vpr = this.ParseInternal(dataws, dataStore, ws);
             wb.Dispose();
             return vpr;
         }

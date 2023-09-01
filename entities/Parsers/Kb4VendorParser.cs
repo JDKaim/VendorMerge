@@ -10,23 +10,11 @@ namespace VendorMerge.Parsers
 
         public override string Name => "KnowBe4 Product Billing";
 
-        private string WorksheetName;
-
-        public Kb4VendorParser(string inputDirectory, string spreadsheetName, string worksheetName) : base(inputDirectory, spreadsheetName)
+        public Kb4VendorParser(string inputDirectory, string spreadsheetName, string worksheetName) : base(inputDirectory, spreadsheetName, worksheetName)
         {
-            this.WorksheetName = worksheetName;
         }
-        protected override VendorParserResults ParseInternal(XLWorkbook wb, IVendorCollection dataStore, IXLWorksheet renamer)
+        protected override VendorParserResults ParseInternal(IXLWorksheet ws, IVendorCollection dataStore, IXLWorksheet renamer)
         {
-            IXLWorksheet ws;
-            try
-            {
-                ws = wb.Worksheet(this.WorksheetName);
-            }
-            catch (Exception e)
-            {
-                return VendorParserResults.CreateError($"An error occurred while loading the file for '{this.Name}': {e.Message}");
-            }
             int recordsParsed = 0;
             var firstRowUsed = ws.FirstRowUsed();
             var firstColumnUsed = ws.FirstColumnUsed();

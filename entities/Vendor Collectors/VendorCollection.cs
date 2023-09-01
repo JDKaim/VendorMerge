@@ -6,11 +6,12 @@ public class VendorCollection : IVendorCollection
 
     private Dictionary<string, VendorDataSet> _vendorDataSets = new Dictionary<string, VendorDataSet>();
 
-    public VendorCollection()
-    {
-    }
+    public string Name { get; private set; }
 
-    public string Name => "Master Sheet";
+    public VendorCollection(string name)
+    {
+        this.Name = name;
+    }
 
     public void AddCustomerRecordQuantity(string vendor, string customer, string product, int quantity)
     {

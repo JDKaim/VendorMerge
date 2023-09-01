@@ -5,9 +5,9 @@ public class Consolidator
 
     }
 
-    public FinalCollection Consolidate(VendorCollection master, CompetingVendorCollection competitor)
+    public VendorCollection Consolidate(VendorCollection master, VendorCollection competitor)
     {
-        FinalCollection final = new FinalCollection();
+        VendorCollection final = new VendorCollection("Final Sheet");
         foreach (VendorDataSet vendor in master.GetVendorDataSets())
         {
             bool inCompete = false;

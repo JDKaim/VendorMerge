@@ -161,7 +161,7 @@ namespace VendorMerge.Printers
                     column++;
                 }
             }
-            var filePaths = Directory.GetFiles(masterSheet.getFileLocation(), masterSheet.getSpreadsheetName());
+            var filePaths = Directory.GetFiles(masterSheet.FileLocation, masterSheet.SpreadsheetName);
             XLWorkbook master = new XLWorkbook();
             try
             {
