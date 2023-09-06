@@ -12,7 +12,7 @@ namespace VendorMerge.Parsers
         public S1completeVendorParser(string inputDirectory, string spreadsheetName, string worksheetName) : base(inputDirectory, spreadsheetName, worksheetName)
         {
         }
-        protected override VendorParserResults ParseInternal(IXLWorksheet ws, IVendorCollection dataStore, IXLWorksheet renamer)
+        protected override VendorParserResults ParseInternal(IXLWorksheet ws, IVendorCollection dataStore)
         {
             int recordsParsed = 0;
             var firstRowUsed = ws.FirstRowUsed();
@@ -21,7 +21,7 @@ namespace VendorMerge.Parsers
             while (!categoryRow.Cell(1).IsEmpty())
             {
                 string customer = ws.Cell(categoryRow.RowNumber(), 2).GetString();
-                customer = customer.Substring(2, customer.Length - 4);
+                // customer = customer.Substring(2, customer.Length - 4);
                 string vendor = "Vendor";
                 string product = "SentinelOne Complete";
                 if (!string.IsNullOrWhiteSpace(ws.Cell(categoryRow.RowNumber(), categoryColumn.ColumnNumber()).GetString()))

@@ -5,12 +5,12 @@ using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace VendorMerge.Parsers
 {
-    public class PronetVendorParser : ExcelVendorParser
+    public class VhostproesxVendorParser : ExcelVendorParser
     {
 
-        public override string Name => "PRONET Product Billing";
+        public override string Name => "VHOSTPRO-ESX Product Billing";
 
-        public PronetVendorParser(string inputDirectory, string spreadsheetName, string worksheetName) : base(inputDirectory, spreadsheetName, worksheetName)
+        public VhostproesxVendorParser(string inputDirectory, string spreadsheetName, string worksheetName) : base(inputDirectory, spreadsheetName, worksheetName)
         {
         }
         protected override VendorParserResults ParseInternal(IXLWorksheet ws, IVendorCollection dataStore)
@@ -23,7 +23,7 @@ namespace VendorMerge.Parsers
             {
                 string customer = ws.Cell(categoryRow.RowNumber(), 1).GetString();
                 string vendor = "Vendor";
-                string product = "PRONET";
+                string product = "VHOSTPRO";
                 if (!string.IsNullOrWhiteSpace(ws.Cell(categoryRow.RowNumber(), categoryColumn.ColumnNumber()).GetString()))
                 {
                     dataStore.AddCustomerRecordQuantity(vendor, customer, product, 1);

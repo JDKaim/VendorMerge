@@ -12,7 +12,7 @@ namespace VendorMerge.Parsers
         public MasterParser(string inputDirectory, string spreadsheetName, string worksheetName) : base(inputDirectory, spreadsheetName, worksheetName)
         {
         }
-        protected override VendorParserResults ParseInternal(IXLWorksheet ws, IVendorCollection dataStore, IXLWorksheet renamer)
+        protected override VendorParserResults ParseInternal(IXLWorksheet ws, IVendorCollection dataStore)
         {
             int recordsParsed = 0;
             var firstRowUsed = ws.FirstRowUsed();

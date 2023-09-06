@@ -13,7 +13,7 @@ namespace VendorMerge.Parsers
         public Kb4VendorParser(string inputDirectory, string spreadsheetName, string worksheetName) : base(inputDirectory, spreadsheetName, worksheetName)
         {
         }
-        protected override VendorParserResults ParseInternal(IXLWorksheet ws, IVendorCollection dataStore, IXLWorksheet renamer)
+        protected override VendorParserResults ParseInternal(IXLWorksheet ws, IVendorCollection dataStore)
         {
             int recordsParsed = 0;
             var categoryColumn = ws.FirstColumnUsed().ColumnRight();

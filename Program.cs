@@ -3,7 +3,7 @@ using VendorMerge.Parsers;
 using VendorMerge.Printers;
 using ClosedXML.Excel;
 
-Dictionary<string, string> renamers = RenamingParser.ParseRename("input","Renaming.xlsx","GRID");
+Dictionary<string, string> renamers = RenamingParser.ParseRename("input", "Renaming.xlsx", "GRID");
 VendorCollection dataStore = new VendorCollection("Master Sheet", renamers);
 VendorCollection competingDataStore = new VendorCollection("Competing Sheet", renamers);
 Dictionary<string, double> prices = new Dictionary<string, double>();
@@ -23,9 +23,11 @@ List<IVendorParser> newVendorParsers =
         new MyglueVendorParser(documentNames["Myglue"].FileLocation, documentNames["Myglue"].SpreadsheetName, documentNames["Myglue"].WorksheetName),
         new Kb4VendorParser(documentNames["Kb4"].FileLocation, documentNames["Kb4"].SpreadsheetName, documentNames["Kb4"].WorksheetName),
         new S1completeVendorParser(documentNames["S1complete"].FileLocation, documentNames["S1complete"].SpreadsheetName, documentNames["S1complete"].WorksheetName),
-        new S1controlVendorParser(documentNames["S1control"].FileLocation, documentNames["S1control"].SpreadsheetName, documentNames["S1control"].WorksheetName),
+        new VhostproesxVendorParser(documentNames["Vhostproesx"].FileLocation, documentNames["Vhostproesx"].SpreadsheetName, documentNames["Vhostproesx"].WorksheetName),
+        new VhostprohvVendorParser(documentNames["Vhostprohv"].FileLocation, documentNames["Vhostprohv"].SpreadsheetName, documentNames["Vhostprohv"].WorksheetName),
+        // new S1controlVendorParser(documentNames["S1control"].FileLocation, documentNames["S1control"].SpreadsheetName, documentNames["S1control"].WorksheetName),
         new VeeamVendorParser(documentNames["Veeam"].FileLocation, documentNames["Veeam"].SpreadsheetName, documentNames["Veeam"].WorksheetName),
-        new InkyVendorParser(documentNames["Inky"].FileLocation, documentNames["Inky"].SpreadsheetName, documentNames["Inky"].WorksheetName)
+        // new InkyVendorParser(documentNames["Inky"].FileLocation, documentNames["Inky"].SpreadsheetName, documentNames["Inky"].WorksheetName)
     };
 
 VendorParserResults results = masterParser.Parse(dataStore);

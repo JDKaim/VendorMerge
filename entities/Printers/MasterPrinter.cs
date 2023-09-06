@@ -61,6 +61,8 @@ namespace VendorMerge.Printers
 
         public void FinalPrint(IVendorCollection vendorCollection, IVendorCollection masterCollection, IVendorCollection competingCollection, Dictionary<string, double> prices, DocumentName masterSheet)
         {
+            List<string> csbProducts = new List<string> {"Inky", "DNSFilter", "SentinelOne Complete"};
+            int csbTotal = 0;
             var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("GRID");
             ws.Cell("A1").Value = "Client";
@@ -78,6 +80,7 @@ namespace VendorMerge.Printers
                     ws.Cell(1, topColumn).Value = product;
                     topColumn++;
                 }
+                ws.Cell(1, topColumn).Value = "CSB Discounts";
                 List<CustomerVendorRecord> customerVendorRecords = vendorDataSet.GetCustomerVendorRecords();
                 foreach (CustomerVendorRecord customerVendorRecord in customerVendorRecords)
                 {
@@ -131,6 +134,12 @@ namespace VendorMerge.Printers
                         ws.Cell(currentRow, currentColumn).Style.Fill.BackgroundColor = XLColor.Gold;
                         currentColumn++;
                     }
+                    int csbMax = customerVendorRecord.GetQuantity("KnowBe4 Custom") + customerVendorRecord.GetQuantity("KnowBe4 Bulk");
+                    foreach (string csbProduct in csbProducts) {
+                        csbMax = Math.Min(csbMax, customerVendorRecord.GetQuantity(csbProduct));
+                    }
+                    ws.Cell(currentRow, currentColumn).Value = csbMax;
+                    csbTotal += csbMax;
                     currentRow++;
                 }
                 currentRow++;
@@ -141,6 +150,7 @@ namespace VendorMerge.Printers
                     ws.Cell(currentRow, column).Value = product;
                     column++;
                 }
+                ws.Cell(currentRow, column).Value = "CSB Discounts";
                 currentRow++;
                 ws.Cell(currentRow, 1).Value = "Quantity";
                 column = 2;
@@ -150,6 +160,7 @@ namespace VendorMerge.Printers
                     totalPurchases.Add(product, vendorDataSet.TotalSales(product));
                     column++;
                 }
+                ws.Cell(currentRow, column).Value = csbTotal;
                 currentRow++;
                 int totalRow = currentRow;
                 ws.Cell(currentRow, 1).Value = "Revenue";
@@ -226,7 +237,7 @@ namespace VendorMerge.Printers
             Dictionary<string, Dictionary<string, int>> _vendorProducts = combiner.combineProducts(vendorCollection);
             sumRow = sumRow.RowBelow().RowBelow().RowBelow().RowBelow().RowBelow().RowBelow();
             Dictionary<string, int> _customersUsing = combiner.customerUsage(_vendorProducts);
-            sumColumn = summary.Column(sumColumn.ColumnNumber() - 8);
+            sumColumn = summary.Column(sumColumn.ColumnNumber() - 7);
             List<string> characters = new List<string>{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
             int sumColumnNumber = sumColumn.ColumnNumber();
             string sumLetters = "";

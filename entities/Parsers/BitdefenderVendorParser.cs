@@ -12,7 +12,7 @@ namespace VendorMerge.Parsers
         public BitdefenderVendorParser(string inputDirectory, string spreadsheetName, string worksheetName) : base(inputDirectory, spreadsheetName, worksheetName)
         {
         }
-        protected override VendorParserResults ParseInternal(IXLWorksheet ws, IVendorCollection dataStore, IXLWorksheet renamer)
+        protected override VendorParserResults ParseInternal(IXLWorksheet ws, IVendorCollection dataStore)
         {
             int recordsParsed = 0;
             var firstRowUsed = ws.FirstRowUsed();
@@ -20,7 +20,7 @@ namespace VendorMerge.Parsers
             while (!categoryRow.Cell(1).IsEmpty())
             {
                 string customer = ws.Cell(categoryRow.RowNumber(), 2).GetString();
-                customer = customer.Substring(1, customer.Length - 2);
+                // customer = customer.Substring(1, customer.Length - 2);
                 string vendor = "Vendor";
                 string product = "Bitdefender";
                 if (!string.IsNullOrWhiteSpace(ws.Cell(categoryRow.RowNumber(), 1).GetString()))
