@@ -25,12 +25,20 @@ public class VendorDataSet
         this._customerVendorRecords[customer].AddQuantity(product, quantity);
     }
 
+    public void SubtractCustomerRecordQuantity(string customer, string product, int quantity)
+    {
+        if (!_products.ContainsKey(product)) { throw new ArgumentOutOfRangeException(product + " does not exist."); }
+        if (!this._customerVendorRecords.ContainsKey(customer)) { throw new ArgumentOutOfRangeException(customer + " does not exist."); }
+        this._customerVendorRecords[customer].SubtractQuantity(product, quantity);
+    }
+
     public List<CustomerVendorRecord> GetCustomerVendorRecords()
     {
         return this._customerVendorRecords.Values.ToList();
     }
 
-    public List<string> GetCustomers() {
+    public List<string> GetCustomers()
+    {
         return this._customerVendorRecords.Keys.ToList();
     }
 
@@ -39,9 +47,11 @@ public class VendorDataSet
         return this._products.Keys.ToList();
     }
 
-    public int TotalSales(string product) {
+    public int TotalSales(string product)
+    {
         int total = 0;
-        foreach (CustomerVendorRecord cvr in GetCustomerVendorRecords()) {
+        foreach (CustomerVendorRecord cvr in GetCustomerVendorRecords())
+        {
             total += cvr.GetQuantity(product);
         }
         return total;

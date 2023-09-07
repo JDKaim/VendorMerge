@@ -18,7 +18,7 @@ namespace VendorMerge.Parsers
             int recordsParsed = 0;
             var firstRowUsed = ws.FirstRowUsed();
             var categoryColumn = ws.FirstColumnUsed().ColumnRight();
-            var categoryRow = firstRowUsed.RowBelow().RowBelow();
+            var categoryRow = ws.Row(3);
             while (!categoryRow.Cell(1).IsEmpty())
             {
                 string customer = ws.Cell(categoryRow.RowNumber(), 1).GetString();
@@ -27,6 +27,7 @@ namespace VendorMerge.Parsers
                 if (!string.IsNullOrWhiteSpace(ws.Cell(categoryRow.RowNumber(), categoryColumn.ColumnNumber()).GetString()))
                 {
                     dataStore.AddCustomerRecordQuantity(vendor, customer, product, 1);
+                    dataStore.SubtractCustomerRecordQuantity(vendor, customer, "PROSERV", 1);
                 }
                 recordsParsed++;
                 categoryRow = categoryRow.RowBelow();

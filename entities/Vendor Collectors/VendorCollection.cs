@@ -34,6 +34,24 @@ public class VendorCollection : IVendorCollection
         this._vendorDataSets[vendor].AddCustomerRecordQuantity(realCustomer, product, quantity);
     }
 
+    public void SubtractCustomerRecordQuantity(string vendor, string customer, string product, int quantity)
+    {
+        string realCustomer = "";
+        if (_Renamers.ContainsKey(customer))
+        {
+            realCustomer = _Renamers[customer];
+        }
+        else
+        {
+            throw new Exception($"Customer '{realCustomer}' does not exist. Please define in \"Renaming.xlsx\" or add to Master Sheet.");
+        }
+        if (!this._vendorDataSets.ContainsKey(vendor))
+        {
+            throw new ArgumentOutOfRangeException(vendor + " does not exist.");
+        }
+        this._vendorDataSets[vendor].SubtractCustomerRecordQuantity(realCustomer, product, quantity);
+    }
+
     public List<VendorDataSet> GetVendorDataSets()
     {
         return this._vendorDataSets.Values.ToList();

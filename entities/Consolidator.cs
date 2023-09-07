@@ -26,7 +26,7 @@ public class Consolidator
                                 {
                                     if (competingCustomer.Customer == customer.Customer)
                                     {
-                                        if (product != "VHOSTPRO" && product != "PROSERV" && product != "PROWRK" && product != "PROSERV")
+                                        if (product != "VHOSTPRO" && product != "PROSERV" && product != "PROWRK" && product != "PRONET")
                                         {
                                             final.AddCustomerRecordQuantity(vendor.Vendor, customer.Customer, product, Math.Max(customer.GetQuantity(product), competingCustomer.GetQuantity(product)));
                                         }
@@ -40,7 +40,7 @@ public class Consolidator
                                 }
                                 if (!competeContainsCustomer)
                                 {
-                                    if (product != "VHOSTPRO" && product != "PROSERV" && product != "PROWRK" && product != "PROSERV")
+                                    if (product != "VHOSTPRO" && product != "PROSERV" && product != "PROWRK" && product != "PRONET")
                                     {
                                         final.AddCustomerRecordQuantity(vendor.Vendor, customer.Customer, product, customer.GetQuantity(product));
                                     }

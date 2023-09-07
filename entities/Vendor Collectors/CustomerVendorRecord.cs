@@ -22,6 +22,19 @@ public class CustomerVendorRecord
         this._quantities[product] += quantity;
     }
 
+    public void SubtractQuantity(string product, int quantity)
+    {
+        if (!this._quantities.ContainsKey(product))
+        {
+            throw new ArgumentOutOfRangeException("PROSERV hasn't been read and you are attempting to remove from it.");
+        }
+        if (this._quantities[product] < quantity)
+        {
+            throw new ArgumentOutOfRangeException("More VHOSTPRO-HV than PROSERV ):.");
+        }
+        this._quantities[product] -= quantity;
+    }
+    
     public int GetQuantity(string product)
     {
         if (!this._quantities.ContainsKey(product)) { return 0; }
